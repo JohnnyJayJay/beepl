@@ -24,4 +24,4 @@
        wrap-json-response
        (wrap-json-body {:keywords? true})
        (wrap-authenticate (:public-key config))
-       wrap-with-logger)))
+       #_wrap-with-logger)))

@@ -15,5 +15,3 @@
 
 (defonce translation-queries
   (atom {}))
-
-(def deepl-api-key "a39a9835-4ca7-d558-d74b-34ca596a5715:fx")
