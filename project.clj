@@ -10,7 +10,7 @@
                  [com.github.johnnyjayjay/ring-discord-auth "1.0.0"]
                  [com.github.johnnyjayjay/slash "0.2.0-SNAPSHOT"]
                  [bananaoomarang/ring-debug-logging "1.1.0"]
-                 [org.suskalo/discljord "1.3.0-RC1"]
+                 [org.suskalo/discljord "1.3.0-RC2"]
                  [mount "0.1.16"]]
   :main ^:skip-aot beepl.core
   :target-path "target/%s"
