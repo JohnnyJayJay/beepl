@@ -21,7 +21,7 @@
    "HU" {:name "Hungarian", :emoji "🇭🇺"},
    "RO" {:name "Romanian", :emoji "🇷🇴"},
    "SV" {:name "Swedish", :emoji "🇸🇪"},
-   "EN-US" {:name "English", :emoji "🇺🇸"},
+   "EN" {:name "English", :emoji "🇺🇸"},
    "FR" {:name "French", :emoji "🇫🇷"},
    "DE" {:name "German", :emoji "🇩🇪"},
    "ET" {:name "Estonian", :emoji "🇪🇪"},
@@ -32,7 +32,7 @@
    "ES" {:name "Spanish", :emoji "🇪🇸"},
    "ZH" {:name "Chinese", :emoji "🇨🇳"},
    "SL" {:name "Slovenian", :emoji "🇸🇮"},
-   "PT-PT" {:name "Portuguese", :emoji "🇵🇹"},
+   "PT" {:name "Portuguese", :emoji "🇵🇹"},
    "PL" {:name "Polish", :emoji "🇵🇱"}))
 
 (defn lang-options [default]
