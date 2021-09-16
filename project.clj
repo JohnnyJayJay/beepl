@@ -8,7 +8,7 @@
                  [ring/ring-json "0.5.1"]
                  [http-kit "2.5.3"]
                  [com.github.johnnyjayjay/ring-discord-auth "1.0.0"]
-                 [com.github.johnnyjayjay/slash "0.1.1-SNAPSHOT"]
+                 [com.github.johnnyjayjay/slash "0.2.0-SNAPSHOT"]
                  [bananaoomarang/ring-debug-logging "1.1.0"]
                  [org.suskalo/discljord "1.3.0-RC1"]
                  [mount "0.1.16"]]

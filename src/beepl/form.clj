@@ -49,7 +49,7 @@
         (lang-options default)))
 
 (defn submit-button [id disabled]
-  (cmp/button :sucess (str id \_ "submit") :label "Translate" :emoji {:name "🌐"} :disabled disabled))
+  (cmp/button :success (str id \_ "submit") :label "Translate" :emoji {:name "🌐"} :disabled disabled))
 
 (defn form [id source-default target-default submit-disabled?]
   [(cmp/action-row
