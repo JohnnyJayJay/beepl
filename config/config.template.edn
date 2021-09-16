@@ -1,0 +1,3 @@
+{:bot-token "discord bot token"
+ :public-key "discord app public key"
+ :deepl-key "deepl api key"}

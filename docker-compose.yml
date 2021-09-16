@@ -1,0 +1,8 @@
+version: "3.9"
+services:
+  server:
+    image: johnnyjayjay/beepl:latest
+    volumes:
+      - ./config:/usr/app/beepl/config:ro
+    ports:
+      - "8090" # change if you set a different port in your config
