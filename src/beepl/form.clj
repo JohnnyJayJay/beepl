@@ -48,10 +48,17 @@
          :default (= default "detect"))
         (lang-options default)))
 
-(defn submit-button [id disabled]
-  (cmp/button :success (str id \_ "submit") :label "Translate" :emoji {:name "🌐"} :disabled disabled))
+(defn toggle-public-button [id public?]
+  (cmp/button
+   (if public? :success :danger)
+   (str id \_ "toggle-public")
+   :label (str (if public? "Everybody" "Only you") " will see the translation")
+   :emoji {:name (if public? "🔊" "🔇")}))
 
-(defn form [id source-default target-default submit-disabled?]
+(defn submit-button [id disabled]
+  (cmp/button :primary (str id \_ "submit") :label "Translate" :emoji {:name "💬"} :disabled disabled))
+
+(defn form [id & {:keys [source-default target-default submit-disabled? public?]}]
   [(cmp/action-row
     (cmp/select-menu
      (str id \_ "source")
@@ -63,19 +70,17 @@
      (lang-options target-default)
      :placeholder "Target Language"))
    (cmp/action-row
+    (toggle-public-button id public?))
+   (cmp/action-row
     (submit-button id submit-disabled?))])
 
 (defn parse-action [action]
   (str/split action #"_" 2))
 
-(defn translation-response [{}])
-
-(defmulti handle-action (fn [id component value query interaction] component))
-
-(defmethod handle-action "submit"
-  [id _ _
-   {:keys [content source-lang target-lang author] message-id :id}
-   {app-id :application_id interact-token :token guild-id :guild_id channel-id :channel_id {:keys [user]} :member}]
+(defn submit-query
+  [id
+   {:keys [content source-lang target-lang author public?] message-id :id :as _query}
+   {app-id :application_id interact-token :token guild-id :guild_id channel-id :channel_id {:keys [user]} :member :as _interaction}]
   (future
     (let [{[{detected-lang :detected_source_language translated-text :text}] :translations}
           (deepl/translate (:deepl-key config) content source-lang target-lang)
@@ -88,6 +93,7 @@
        :content ""
        :allowed-mentions []
        :components []
+       :flags (if public? 0 64)
        :embeds
        [{:description
          (str translated-text
@@ -101,18 +107,33 @@
   (swap! translation-queries dissoc id)
   (rsp/update-message {:content "Translating, please wait...", :components []}))
 
-(defmethod handle-action "target"
-  [id _ value {:keys [source-lang]} _]
-  (swap! translation-queries assoc-in [id :target-lang] value)
-  (rsp/update-message {:components (form id (or source-lang "detect") value false)}))
+(defmulti update-query (fn [action query value] action))
 
-(defmethod handle-action "source"
-  [id _ value _ _]
-  (swap! translation-queries assoc-in [id :source-lang] (if (= value "detect") nil value))
-  rsp/deferred-update-message)
+(defmethod update-query "target"
+  [_ query value]
+  (assoc query :target-lang value))
+
+(defmethod update-query "source"
+  [_ query value]
+  (assoc query :source-lang (if (= value "detect") nil value)))
+
+(defmethod update-query "toggle-public"
+  [_ query _]
+  (update query :public? not))
+
+(defn query->form [id {:keys [source-lang target-lang public?] :as _query}]
+  (form id
+        :source-default (or source-lang "detect")
+        :target-default target-lang
+        :submit-disabled? (nil? target-lang)
+        :public? public?))
 
 (defn form-handler [{{action :custom_id [value] :values} :data :as interaction}]
   (let [[id component] (parse-action action)]
     (if-let [query (@translation-queries id)]
-      (handle-action id component value query interaction)
+      (if (= component "submit")
+        (submit-query id query interaction)
+        (let [updated (update-query component query value)]
+          (swap! translation-queries assoc id updated)
+          (rsp/update-message {:components (query->form id updated)})))
       (rsp/update-message {:components [] :content "Sorry, too much time has passed since you clicked translate. Please try again."}))))

@@ -16,7 +16,7 @@
   (swap! translation-queries assoc id message)
   (.schedule scheduler #(swap! translation-queries dissoc id) 15 TimeUnit/MINUTES)
   (-> {:content (str "<@" user-id ">, please select a source and target language for the translation of the message.")
-       :components (form id "detect" nil true)}
+       :components (form id :source-default "detect" :submit-disabled? true)}
       rsp/channel-message
       rsp/ephemeral)
   #_(rsp/channel-message {:content "hi"}))
