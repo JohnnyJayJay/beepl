@@ -99,7 +99,8 @@
        [{:description translated-text
          :author {:name (discord-fmt/user-tag author)
                   :icon_url (discord-cdn/effective-user-avatar author)}
-         :footer {:text (str "Translated from " source-name " " source-emoji " to " target-name " " target-emoji " - Requested by " (discord-fmt/user-tag user))}}])))
+         :footer {:text (str "Translated from " source-name " " source-emoji " to " target-name " " target-emoji " - Requested by " (discord-fmt/user-tag user))}
+         :color 0x0F2B46}])))
   (swap! translation-queries dissoc id)
   (rsp/update-message {:content "Translating, please wait...", :components []}))
 
