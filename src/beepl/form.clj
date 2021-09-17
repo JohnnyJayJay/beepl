@@ -94,13 +94,9 @@
        :allowed-mentions []
        :components []
        :flags (if public? 0 64)
+       :components [(cmp/action-row (cmp/link-button (str "https://discord.com/channels/" guild-id \/ channel-id \/ message-id) :label "Original message"))]
        :embeds
-       [{:description
-         (str translated-text
-              \newline
-              (discord-fmt/embed-link
-               "Original message"
-               (str "https://discord.com/channels/" guild-id \/ channel-id \/ message-id)))
+       [{:description translated-text
          :author {:name (discord-fmt/user-tag author)
                   :icon_url (discord-cdn/effective-user-avatar author)}
          :footer {:text (str "Translated from " source-name " " source-emoji " to " target-name " " target-emoji " - Requested by " (discord-fmt/user-tag user))}}])))
